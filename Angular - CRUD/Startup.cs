@@ -8,8 +8,12 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Angular___CRUD.Configurations;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 namespace Angular___CRUD
 {
@@ -36,6 +40,9 @@ namespace Angular___CRUD
                 .AddNewtonsoftJson(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                 .AddNewtonsoftJson(o => o.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
+            //SQL Server
+            services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("Default")));
+
             services.AddControllers();
         }
 
@@ -56,6 +63,12 @@ namespace Angular___CRUD
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),"Photos")),
+                RequestPath = "/Photos"
             });
         }
     }
