@@ -111,5 +111,13 @@ namespace Angular___CRUD.Controllers
                 return new JsonResult("anonomous.png");
             }
         }
+
+        [HttpGet]
+        [Route("GetDepartments")]
+        public IActionResult GetDepartments()
+        {
+            List<Department> oDepartmentList = _context.Departments.AsNoTracking().ToList();
+            return Ok(new JsonResult(oDepartmentList));
+        }
     }
 }
